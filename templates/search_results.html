@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'search_song' %}">Search</a>
+  <h2>Search Results</h2>
+  {% if song %}
+    <h3>{{ song.TITLE }} by {{ song.ARTIST }}</h3>
+    {% if lyrics %}
+      <pre>{{ lyrics.lyrics }}</pre>
+      <button id="bookmarkButton" data-song-id="{{ song.SONG_ID }}">Bookmark</button>
+    {% else %}
+      <p>No lyrics found for the given song.</p>
+    {% endif %}
+  {% else %}
+    <p>No results found for the given song title.</p>
+  {% endif %}
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#bookmarkButton').on('click', function() {
+        var songId = $(this).data('song-id');
+        $.ajax({
+          type: 'POST',
+          url: '{% url "bookmark_song" %}',
+          data: { 'song_id': songId, csrfmiddlewaretoken: '{{ csrf_token }}' },
+          success: function(response) {
+            alert(response.message);  
+          },
+          error: function(response) {
+            alert('Error bookmarking the song.');
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}

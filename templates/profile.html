@@ -1,0 +1,26 @@
+{% block content %}
+<h1>Lyric Finder</h1>
+<header>
+  <nav>
+      {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}">Log Out</a>
+      {% else %}
+      <a href="{% url 'signup' %}">Sign Up</a>
+      <a href="{% url 'login' %}">Log In</a>
+      {% endif %}
+  </nav>
+</header>
+  <h2>Profile</h2>
+  {% if fav_lyrics %}
+    <h3>Bookmarked Songs</h3>
+    <ul>
+      {% for fav_lyric in fav_lyrics %}
+        <li>{{ fav_lyric.song.title }} by {{ fav_lyric.song.artist }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No bookmarked songs yet.</p>
+  {% endif %}
+
+  <a href="{% url 'search_song' %}">Search for more lyrics</a>
+{% endblock %}
